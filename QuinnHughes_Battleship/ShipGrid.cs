@@ -11,15 +11,17 @@
                 new Ship("Submarine", 3),
                 new Ship("Destroyer", 2)
             };
+
+        private List<string> notUsedShips = new List<string>();
         private List<string> usedShips = new List<string>();
-            
+
 
         public ShipGrid()
-        { //Remember to fix the RED debug
+        {
             grid = new char[10, 10]
                {
                     {'~','~','~','~','~','~','~','~','~','~'},
-                    {'~','~','S','X','M','~','~','~','~','~'},
+                    {'~','~','~','~','~','~','~','~','~','~'},
                     {'~','~','~','~','~','~','~','~','~','~'},
                     {'~','~','~','~','~','~','~','~','~','~'},
                     {'~','~','~','~','~','~','~','~','~','~'},
@@ -31,9 +33,13 @@
                };
 
         }
-
-        public void Display()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        public void Display(string player)
         {
+            Console.WriteLine(player +"'s Ships");
             Console.WriteLine("   01 02 03 04 05 06 07 08 09 10");
             for (int i = 0; i < grid.GetLength(0); i++) //the 0 or 1 here refer to the dimension, since its 2D you only have 0 or 1 referring to x and y
             { //for each column
@@ -75,20 +81,24 @@
             Console.ForegroundColor = ConsoleColor.Gray;
 
         }
+        /// <summary>
+        /// 
+        /// </summary>
         public void PlaceShip()
         {
             string[] directions = ["up", "down", "left", "right"];
-            List<string> notUsedShips = new List<string>();
-            
-            foreach (var ship in allShips)
+            foreach (Ship ship in allShips)
             {
-                if (!usedShips.Contains(ship.Name))
+                if ((!usedShips.Contains(ship.Name.ToLower())) && (!notUsedShips.Contains(ship.Name.ToLower())))
                 {
-                    notUsedShips.Add(ship.Name);
+                    notUsedShips.Add(ship.Name.ToLower());
                 }
+                else if (usedShips.Contains(ship.Name.ToLower()))
+                {
+                    notUsedShips.Remove(ship.Name.ToLower());
+                }
+
             }
-
-
 
             string shipName;
             int xPos;
@@ -98,6 +108,7 @@
 
             while (!isShipPlaced)
             {
+
                 //prompt player
                 Console.WriteLine("What ship would you like to place?");
                 shipName = InputOutput.String(notUsedShips, true);
@@ -109,13 +120,26 @@
                 direction = InputOutput.String(directions, true);
 
                 //Can it fit?
-                PlaceAndVerify(shipName,xPos,yPos,direction);
+                isShipPlaced = PlaceAndVerify(shipName, xPos, yPos, direction);
+                //This only places when its correct
+                if (isShipPlaced)
+                {
+                    usedShips.Add(shipName);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Cant put that there, cheater.");
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
+
 
             }
-            
-
-
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool CheckLoss()
         {
             bool isLoss = true;
@@ -128,9 +152,9 @@
             }
             return isLoss;
         }
-         public void PlaceAndVerify(string ship, int X, int Y, string direction)
+        public bool PlaceAndVerify(string ship, int X, int Y, string direction)
         {
-            int shipLength=0;
+            int shipLength = 0;
             foreach (Ship s in allShips)
             {
                 if (s.Name.ToLower() == ship)
@@ -138,42 +162,123 @@
                     shipLength = s.Length;
                 }
             }
-            // x y always within bounds
-            //check shipLength number of times that grid char is ~ in given direction, and replace with green s and reset color after
 
             bool isValidPlacement = true;
             Console.ForegroundColor = ConsoleColor.Green;
+            int iterateX;
+            int iterateY;
             switch (direction)
             {
-                
+
                 case "up":
-                {
-                        int x = X;
-                        int y = Y;
+                    iterateX = X;
+                    iterateY = Y;
+                    {
                         for (int i = 0; i < shipLength; i++)
                         {
-                            
-                            if (!(grid[x-1,y-1] == '~'))
+
+                            if ((iterateY < 0) || (!(grid[iterateY - 1, iterateX - 1] == '~'))) //out of bounds check fails?
+
                             {
                                 isValidPlacement = false;
                                 break;
                             }
-                            Y--;
+                            iterateY--;
                         }
+                        if (isValidPlacement)
+                        {
+                            iterateY = Y;
+                            for (int i = 0; i < shipLength; i++)
+                            {
+                                grid[iterateY - 1, iterateX - 1] = 'S';
+                                iterateY--;
+                            }
+                        }
+
+                        break;
+                    }
+                case "down":
+                    {
+                        iterateX = X;
+                        iterateY = Y;
                         for (int i = 0; i < shipLength; i++)
                         {
-                                grid[x - 1, y - 1] = 'S';
-                                y--;
-                        }
-                        break;
-                }
-                 
 
+                            if ((iterateY > 9) || (!(grid[iterateY - 1, iterateX - 1] == '~')))
+                            {
+                                isValidPlacement = false;
+                                break;
+                            }
+                            iterateY++;
+                        }
+                        iterateY = Y;
+                        if (isValidPlacement)
+                        {
+                            for (int i = 0; i < shipLength; i++)
+                            {
+                                grid[iterateY - 1, iterateX - 1] = 'S';
+                                iterateY++;
+                            }
+                        }
+
+                        break;
+                    }
+                case "left":
+                    {
+                        iterateX = X;
+                        iterateY = Y;
+                        for (int i = 0; i < shipLength; i++)
+                        {
+
+                            if ((iterateX < 0) || (!(grid[iterateY - 1, iterateX - 1] == '~')))
+                            {
+                                isValidPlacement = false;
+                                break;
+                            }
+                            iterateX--;
+                        }
+                        if (isValidPlacement)
+                        {
+                            iterateX = X;
+                            for (int i = 0; i < shipLength; i++)
+                            {
+                                grid[iterateY - 1, iterateX - 1] = 'S';
+                                iterateX--;
+                            }
+                        }
+
+                        break;
+                    }
+                case "right":
+                    {
+                        iterateX = X;
+                        iterateY = Y;
+                        for (int i = 0; i < shipLength; i++)
+                        {
+
+                            if ((iterateX > 9) || !(grid[iterateY - 1, iterateX - 1] == '~'))
+                            {
+                                isValidPlacement = false;
+                                break;
+                            }
+                            iterateX++;
+                        }
+
+                        if (isValidPlacement)
+                        {
+                            iterateX = X;
+                            for (int i = 0; i < shipLength; i++)
+                            {
+                                grid[iterateY - 1, iterateX - 1] = 'S';
+                                iterateX++;
+                            }
+                        }
+
+                        break;
+                    }
             }
             Console.ForegroundColor = ConsoleColor.Gray;
-
-
-
+            return isValidPlacement;
 
 
         }
