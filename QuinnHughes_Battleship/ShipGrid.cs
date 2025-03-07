@@ -3,7 +3,16 @@
     public class ShipGrid
     {
         private char[,] grid;
-
+        private static List<Ship> allShips = new List<Ship>
+            {
+                new Ship("Carrier", 5),
+                new Ship("Battleship", 4),
+                new Ship("Cruiser", 3),
+                new Ship("Submarine", 3),
+                new Ship("Destroyer", 2)
+            };
+        private List<string> usedShips = new List<string>();
+            
 
         public ShipGrid()
         { //Remember to fix the RED debug
@@ -66,9 +75,20 @@
             Console.ForegroundColor = ConsoleColor.Gray;
 
         }
-        public void PlaceShip(List<string> ships)
+        public void PlaceShip()
         {
             string[] directions = ["up", "down", "left", "right"];
+            List<string> notUsedShips = new List<string>();
+            
+            foreach (var ship in allShips)
+            {
+                if (!usedShips.Contains(ship.Name))
+                {
+                    notUsedShips.Add(ship.Name);
+                }
+            }
+
+
 
             string shipName;
             int xPos;
@@ -80,14 +100,19 @@
             {
                 //prompt player
                 Console.WriteLine("What ship would you like to place?");
+                shipName = InputOutput.String(notUsedShips, true);
+                Console.WriteLine("What X or Horizontal position should it start?");
+                xPos = InputOutput.Int(1, 10);
+                Console.WriteLine("What Y or Vertical position should it start?");
+                yPos = InputOutput.Int(1, 10);
+                Console.WriteLine("What direction should the rest of the ship follow?");
+                direction = InputOutput.String(directions, true);
 
-                //InputOutput.String();
+                //Can it fit?
+                PlaceAndVerify(shipName,xPos,yPos,direction);
+
             }
-
-
-
-
-
+            
 
 
         }
@@ -102,6 +127,55 @@
                 }
             }
             return isLoss;
+        }
+         public void PlaceAndVerify(string ship, int X, int Y, string direction)
+        {
+            int shipLength=0;
+            foreach (Ship s in allShips)
+            {
+                if (s.Name.ToLower() == ship)
+                {
+                    shipLength = s.Length;
+                }
+            }
+            // x y always within bounds
+            //check shipLength number of times that grid char is ~ in given direction, and replace with green s and reset color after
+
+            bool isValidPlacement = true;
+            Console.ForegroundColor = ConsoleColor.Green;
+            switch (direction)
+            {
+                
+                case "up":
+                {
+                        int x = X;
+                        int y = Y;
+                        for (int i = 0; i < shipLength; i++)
+                        {
+                            
+                            if (!(grid[x-1,y-1] == '~'))
+                            {
+                                isValidPlacement = false;
+                                break;
+                            }
+                            Y--;
+                        }
+                        for (int i = 0; i < shipLength; i++)
+                        {
+                                grid[x - 1, y - 1] = 'S';
+                                y--;
+                        }
+                        break;
+                }
+                 
+
+            }
+            Console.ForegroundColor = ConsoleColor.Gray;
+
+
+
+
+
         }
     }
 }

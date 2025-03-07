@@ -1,4 +1,6 @@
-﻿namespace QuinnHughes_Battleship
+﻿using System.Collections.Generic;
+
+namespace QuinnHughes_Battleship
 {
     internal class InputOutput
     {
@@ -8,7 +10,7 @@
         /// <param name="rangeMin">Minimum number allowed</param>
         /// <param name="rangeMax">Maximum number allowed</param>
         /// <returns>Int within range</returns>
-        public int Int(int rangeMin, int rangeMax)
+        public static int Int(int rangeMin, int rangeMax)
         {
             int parsedInt = 0;
             bool isValidInput = false;
@@ -42,7 +44,7 @@
         /// <param name="list">List of possible ints</param>
         /// <param name="outputOptions">Toggles the console display of the list</param>
         /// <returns>Int within list</returns>
-        public int Int(List<int> list, bool outputOptions)
+        public static int Int(List<int> list, bool outputOptions)
         {
             if (outputOptions)
             {
@@ -66,10 +68,7 @@
                         break;
                     }
                 }
-                else
-                {
-                    Console.WriteLine("Invalid input. Try again.");
-                }
+                Console.WriteLine("Invalid input. Try again.");
             }
             return parsedInt;
         }
@@ -80,7 +79,7 @@
         /// <param name="list">List of possible strings</param>
         /// <param name="outputOptions">Toggles the console display of the list</param>
         /// <returns>String within list</returns>
-        public string String(List<string> list, bool outputOptions)
+        public static string String(List<string> list, bool outputOptions)
         {
             if (outputOptions)
             {
@@ -91,21 +90,22 @@
                 }
             }
 
-
+            List<string> lowerList = new List<string>();
+            foreach (string str in list)
+            {
+                lowerList.Add(str.ToLower());
+            }
+            
             string inputString = "";
             bool isValidInput = false;
             while (!isValidInput)
             {
                 inputString = Console.ReadLine();
+                inputString = inputString.ToLower();
 
-                if (!string.IsNullOrEmpty(inputString))
+                if (!string.IsNullOrEmpty(inputString) && lowerList.Contains(inputString))
                 {
-                    if (list.Contains(inputString))
-                    {
-                        inputString = inputString.ToLower();
-                        isValidInput = true;
-                        break;
-                    }
+                    isValidInput = true;
                 }
                 else
                 {
@@ -114,6 +114,7 @@
             }
             return inputString;
         }
+     
 
         /// <summary>
         /// Outputs string after checking it matches something within a given array
@@ -121,7 +122,7 @@
         /// <param name="array">List of possible strings</param>
         /// <param name="outputOptions">Toggles the console display of the array</param>
         /// <returns>String within list</returns>
-        public string String(string[] array, bool outputOptions)
+        public static string String(string[] array, bool outputOptions)
         {
             if (outputOptions)
             {
@@ -132,20 +133,22 @@
                 }
             }
 
+            List<string> lowerArray = new List<string>();
+            foreach (string str in array)
+            {
+                lowerArray.Add(str.ToLower());
+            }
+
             string inputString = "";
             bool isValidInput = false;
             while (!isValidInput)
             {
                 inputString = Console.ReadLine();
+                inputString = inputString.ToLower();
 
-                if (!string.IsNullOrEmpty(inputString))
+                if (!string.IsNullOrEmpty(inputString) && lowerArray.Contains(inputString))
                 {
-                    if (array.Contains(inputString))
-                    {
-                        inputString = inputString.ToLower();
-                        isValidInput = true;
-                        break;
-                    }
+                    isValidInput = true;
                 }
                 else
                 {
