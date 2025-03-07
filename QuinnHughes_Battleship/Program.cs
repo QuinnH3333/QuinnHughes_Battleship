@@ -4,7 +4,14 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            //PrintTitle(); exit on button press
+            //choose single player or VS
+            //Single(); or Verses();
+            //Replay?(); 
+            ShipGrid p1ShipGrid = new ShipGrid();
+                       
+            p1ShipGrid.Display();
+            
         }
     }
 }
