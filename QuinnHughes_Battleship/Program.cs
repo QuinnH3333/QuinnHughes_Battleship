@@ -9,9 +9,9 @@
             //Single(); or Verses();
             //Replay?(); 
             ShipGrid p1ShipGrid = new ShipGrid();
-                       
+
             p1ShipGrid.Display();
-            
+
         }
     }
 }

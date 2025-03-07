@@ -4,6 +4,7 @@
     {
         private char[,] grid;
 
+
         public ShipGrid()
         { //Remember to fix the RED debug
             grid = new char[10, 10]
@@ -32,11 +33,11 @@
                 {
                     Console.Write((i + 1) + " ");
                 }
-                else 
-                { 
-                    Console.Write("0" + (i + 1) + " "); 
+                else
+                {
+                    Console.Write("0" + (i + 1) + " ");
                 }
-                
+
                 for (int j = 0; j < grid.GetLength(1); j++)
                 { //do the whole row
 
@@ -65,9 +66,30 @@
             Console.ForegroundColor = ConsoleColor.Gray;
 
         }
-        public void PlaceShip(string shipName, int xPos, int yPos, string direction)
+        public void PlaceShip(List<string> ships)
         {
-            //InputHandle.intHandle(0,9);
+            string[] directions = ["up", "down", "left", "right"];
+
+            string shipName;
+            int xPos;
+            int yPos;
+            string direction;
+            bool isShipPlaced = false;
+
+            while (!isShipPlaced)
+            {
+                //prompt player
+                Console.WriteLine("What ship would you like to place?");
+
+                //InputOutput.String();
+            }
+
+
+
+
+
+
+
         }
         public bool CheckLoss()
         {
