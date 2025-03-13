@@ -2,7 +2,7 @@
 {
     public class ShipGrid
     {
-        private char[,] grid;
+        public char[,] grid;
         private static List<Ship> allShips = new List<Ship>
             {
                 new Ship("Carrier", 5),
@@ -11,10 +11,6 @@
                 new Ship("Submarine", 3),
                 new Ship("Destroyer", 2)
             };
-
-        private List<string> notUsedShips = new List<string>();
-        private List<string> usedShips = new List<string>();
-
 
         public ShipGrid()
         {
@@ -33,11 +29,12 @@
                };
 
         }
+ 
         /// <summary>
-        /// 
+        /// Displays the ship grid of a player.
         /// </summary>
-        /// <param name="player"></param>
-        public void Display(string player)
+        /// <param name="player">Name of the player</param>
+        public virtual void Display(string player)
         {
             Console.WriteLine(player +"'s Ships");
             Console.WriteLine("   01 02 03 04 05 06 07 08 09 10");
@@ -84,6 +81,9 @@
         /// <summary>
         /// 
         /// </summary>
+        /// 
+        public List<string> notUsedShips = new List<string>();
+        public List<string> usedShips = new List<string>();
         public void PlaceShip()
         {
             string[] directions = ["up", "down", "left", "right"];
@@ -113,9 +113,9 @@
                 Console.WriteLine("What ship would you like to place?");
                 shipName = InputOutput.String(notUsedShips, true);
                 Console.WriteLine("What X or Horizontal position should it start?");
-                xPos = InputOutput.Int(1, 10);
+                xPos = InputOutput.Int(1, grid.GetLength(0));
                 Console.WriteLine("What Y or Vertical position should it start?");
-                yPos = InputOutput.Int(1, 10);
+                yPos = InputOutput.Int(1,grid.GetLength(1));
                 Console.WriteLine("What direction should the rest of the ship follow?");
                 direction = InputOutput.String(directions, true);
 
@@ -133,14 +133,13 @@
                     Console.ForegroundColor = ConsoleColor.Gray;
                 }
 
-
             }
         }
         /// <summary>
-        /// 
+        /// Checks if there are any ships left on the board.
         /// </summary>
-        /// <returns></returns>
-        public bool CheckLoss()
+        /// <returns>Returns if player has lost</returns>
+        public bool isLoserCheck()
         {
             bool isLoss = true;
             foreach (char c in grid)
@@ -165,6 +164,7 @@
 
             bool isValidPlacement = true;
             Console.ForegroundColor = ConsoleColor.Green;
+
             int iterateX;
             int iterateY;
             switch (direction)
@@ -174,17 +174,24 @@
                     iterateX = X;
                     iterateY = Y;
                     {
+                        if (iterateY < shipLength)
+                        {
+                            isValidPlacement = false;
+                            break;
+                        }
+
                         for (int i = 0; i < shipLength; i++)
                         {
+                            //check if bound is valid first, then check for overwrite
 
-                            if ((iterateY < 0) || (!(grid[iterateY - 1, iterateX - 1] == '~'))) //out of bounds check fails?
-
+                            if (!(grid[iterateY - 1, iterateX - 1] == '~')) //out of bounds check fails?
                             {
                                 isValidPlacement = false;
                                 break;
                             }
                             iterateY--;
                         }
+
                         if (isValidPlacement)
                         {
                             iterateY = Y;
@@ -194,26 +201,34 @@
                                 iterateY--;
                             }
                         }
-
                         break;
                     }
+
                 case "down":
                     {
                         iterateX = X;
                         iterateY = Y;
+
+                        if ((grid.GetLength(1) - iterateY) < shipLength)
+                        {
+                            isValidPlacement = false;
+                            break;
+                        }
+
                         for (int i = 0; i < shipLength; i++)
                         {
-
-                            if ((iterateY > 9) || (!(grid[iterateY - 1, iterateX - 1] == '~')))
+                            if (!(grid[iterateY - 1, iterateX - 1] == '~'))
                             {
                                 isValidPlacement = false;
                                 break;
                             }
                             iterateY++;
                         }
-                        iterateY = Y;
+
+                        
                         if (isValidPlacement)
                         {
+                            iterateY = Y;
                             for (int i = 0; i < shipLength; i++)
                             {
                                 grid[iterateY - 1, iterateX - 1] = 'S';
@@ -227,16 +242,25 @@
                     {
                         iterateX = X;
                         iterateY = Y;
+
+                        if (iterateX < shipLength)
+                        {
+                            isValidPlacement = false;
+                            break;
+                        }
+
                         for (int i = 0; i < shipLength; i++)
                         {
+                            Console.WriteLine("no water.");
 
-                            if ((iterateX < 0) || (!(grid[iterateY - 1, iterateX - 1] == '~')))
+                            if (!(grid[iterateY - 1, iterateX - 1] == '~'))
                             {
                                 isValidPlacement = false;
                                 break;
                             }
                             iterateX--;
                         }
+
                         if (isValidPlacement)
                         {
                             iterateX = X;
@@ -249,14 +273,21 @@
 
                         break;
                     }
+
                 case "right":
                     {
                         iterateX = X;
                         iterateY = Y;
+
+                        if ((grid.GetLength(1) - iterateX) < shipLength)
+                        {
+                            isValidPlacement = false;
+                            break;
+                        }
+
                         for (int i = 0; i < shipLength; i++)
                         {
-
-                            if ((iterateX > 9) || !(grid[iterateY - 1, iterateX - 1] == '~'))
+                            if (!(grid[iterateY - 1, iterateX - 1] == '~'))
                             {
                                 isValidPlacement = false;
                                 break;
@@ -279,8 +310,6 @@
             }
             Console.ForegroundColor = ConsoleColor.Gray;
             return isValidPlacement;
-
-
         }
     }
 }

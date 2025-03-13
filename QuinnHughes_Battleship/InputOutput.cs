@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace QuinnHughes_Battleship
+﻿namespace QuinnHughes_Battleship
 {
     internal class InputOutput
     {
         /// <summary>
-        /// Outputs int after parsing player input and checking its within an inclusive range
+        /// Outputs int after parsing player input and checking its within an exclusive range
         /// </summary>
         /// <param name="rangeMin">Minimum number allowed</param>
         /// <param name="rangeMax">Maximum number allowed</param>
@@ -96,14 +94,18 @@ namespace QuinnHughes_Battleship
                 lowerList.Add(str.ToLower());
             }
             
-            string inputString = "";
+            string? inputString = "";
             bool isValidInput = false;
             while (!isValidInput)
             {
                 inputString = Console.ReadLine();
+                if (inputString == null)
+                {
+                    continue;
+                }
                 inputString = inputString.ToLower();
 
-                if (!string.IsNullOrEmpty(inputString) && lowerList.Contains(inputString))
+                if (lowerList.Contains(inputString))
                 {
                     isValidInput = true;
                 }
@@ -139,14 +141,19 @@ namespace QuinnHughes_Battleship
                 lowerArray.Add(str.ToLower());
             }
 
-            string inputString = "";
+            string? inputString = "";
             bool isValidInput = false;
             while (!isValidInput)
             {
                 inputString = Console.ReadLine();
-                inputString = inputString.ToLower();
+                if (inputString == null)
+                {
+                    continue;
+                }
 
-                if (!string.IsNullOrEmpty(inputString) && lowerArray.Contains(inputString))
+                inputString = inputString.ToLower();
+           
+                if (lowerArray.Contains(inputString))
                 {
                     isValidInput = true;
                 }
