@@ -55,7 +55,7 @@
                     misses++;
                 }
             }
-            Console.WriteLine("\n"+ player + "'s guesses: ");
+            Console.WriteLine("\n" + player + "'s guesses: ");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write(hits + " Hits, ");
             Console.ForegroundColor = ConsoleColor.White;
@@ -70,7 +70,7 @@
             int yPos = 0;
             bool isValidGuess = false;
             //looks at enemy ship grid: if its an S put an X on both boards, if its a ~ put a M on both, if a M or X or out of bounds redo
-            
+
             while (!isValidGuess)
             {
                 Console.WriteLine("What X or Horizontal position will you attack?");
@@ -80,79 +80,125 @@
 
                 xPos--;
                 yPos--;
-                if ((enemyShipGrid[yPos,xPos] == '~') || (enemyShipGrid[yPos, xPos] == 'S'))
+                if ((enemyShipGrid[yPos, xPos] == '~') || (enemyShipGrid[yPos, xPos] == 'S'))
                 {
                     isValidGuess = true;
                     break;
                 }
             }
-            
+
 
             if (enemyShipGrid[yPos, xPos] == 'S')
             {
-                enemyShipGrid[yPos, xPos] = 'X';
-                grid[yPos, xPos] = 'X';
-            }
-            else 
-            {
-                enemyShipGrid[yPos, xPos] = 'M';
-                grid[yPos, xPos] = 'M';
-            }
-     
-        }
-        
-        int remainLocal = 0;
-        int lastHitX;
-        int lastHitY;
-        public void FireAttack(char[,] enemyShipGrid, Random rand)
-        {
-            int xPos = -1;
-            int yPos = -1;
-            bool isValidGuess = false;
-
-            //If previous attack hit, remain attacking the same area for a short while
-            
-            while (!isValidGuess)
-            {
-                if(remainLocal > 0)
-                {
-                    xPos = Math.Min(9, lastHitX + rand.Next(0, 3));
-                    yPos = Math.Min(9, lastHitY + rand.Next(0, 3));
-                    remainLocal--;
-                    if ((enemyShipGrid[yPos, xPos] == '~') || (enemyShipGrid[yPos, xPos] == 'S'))
-                    {
-                        isValidGuess = true;
-                        break;
-                    }
-                }
-                else
-                {
-                    xPos = rand.Next(0, grid.GetLength(0));
-                    yPos = rand.Next(0, grid.GetLength(1));
-
-
-                    if ((enemyShipGrid[yPos, xPos] == '~') || (enemyShipGrid[yPos, xPos] == 'S'))
-                    {
-                        isValidGuess = true;
-                        break;
-                    }
-                }
-            }
-
-            if (enemyShipGrid[yPos, xPos] == 'S')
-            {
-                remainLocal = 4;
-                lastHitX = xPos;
-                lastHitY = yPos;
                 enemyShipGrid[yPos, xPos] = 'X';
                 grid[yPos, xPos] = 'X';
             }
             else
             {
-                remainLocal--;
                 enemyShipGrid[yPos, xPos] = 'M';
                 grid[yPos, xPos] = 'M';
             }
+
+        }
+
+
+        int lastHitX;
+        int lastHitY;
+        bool[] directionHasBeenChecked = { true, true, true, true};
+        bool hitRecently = false;
+        int directionsChecked = 4;
+        int shipBitsFound =  0;    
+        public void FireAttack(char[,] enemyShipGrid, Random rand)
+        {
+            int xPos = lastHitX;
+            int yPos = lastHitY;
+            
+            bool isValidGuess = false;
+
+            while (!isValidGuess)
+            {
+                if (hitRecently)
+                {
+                    xPos = lastHitX;
+                    yPos = lastHitY;
+
+                    if (!directionHasBeenChecked[0])
+                    {
+                        xPos = Math.Min(9, lastHitX + 1);
+                        directionHasBeenChecked[0] = true;
+                        directionsChecked++;
+                    }
+                    else if (!directionHasBeenChecked[1])
+                    {
+                        xPos = Math.Max(0, lastHitX - 1);
+                        directionHasBeenChecked[1] = true;
+                        directionsChecked++;
+                    }
+                    else if (!directionHasBeenChecked[2])
+                    {
+                        yPos = Math.Min(9, lastHitY + 1);
+                        directionHasBeenChecked[2] = true;
+                        directionsChecked++;
+                    }
+                    else if (!directionHasBeenChecked[3])
+                    {
+                        yPos = Math.Max(0, lastHitY - 1);
+                        directionHasBeenChecked[3] = true;
+                        directionsChecked++;
+                    }
+                }
+
+                if (directionsChecked >= directionHasBeenChecked.Length)
+                {
+                    hitRecently = false;
+                    //Randomly checks a checker board pattern, not wasting adjacent guesses
+
+                    xPos = rand.Next(0, grid.GetLength(0));
+                    if (xPos % 2 == 0)
+                    {
+                        yPos = rand.Next(0, grid.GetLength(1) / 2) * 2;
+                    }
+                    else
+                    {
+                        yPos = rand.Next(0, grid.GetLength(1) / 2) * 2 + 1;
+                    }
+                }
+                if ((enemyShipGrid[yPos, xPos] == '~') || (enemyShipGrid[yPos, xPos] == 'S'))
+                {
+                    isValidGuess = true;
+                    break;
+                }
+            }
+
+            if (enemyShipGrid[yPos, xPos] == 'S')
+            {
+                //shipBitsFound++;
+                if(directionsChecked >= directionHasBeenChecked.Length)
+                {
+                    lastHitX = xPos;
+                    lastHitY = yPos;
+                    for (int i = 0; i < directionHasBeenChecked.Length; i++)
+                    {
+                        directionHasBeenChecked[i] = false;
+                    }
+                    directionsChecked = 0;
+                }
+                enemyShipGrid[yPos, xPos] = 'X';
+                grid[yPos, xPos] = 'X';
+                hitRecently = true;
+            }
+            else
+            {
+                //if (shipBitsFound == ShipGrid.allShips[0].Length)
+                //{
+                //    hitRecently = false;
+                //    shipBitsFound = 0;
+                //}
+                enemyShipGrid[yPos, xPos] = 'M';
+                grid[yPos, xPos] = 'M';
+            }
+
         }
     }
 }
+

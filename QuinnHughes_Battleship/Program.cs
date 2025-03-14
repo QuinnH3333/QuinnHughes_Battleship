@@ -69,7 +69,7 @@
             int numberOfShips = 5; //ShipGrid.allShips.Count;
 
             Console.WriteLine("Enter your name:");
-            CPU player1 = new CPU(InputOutput.String());
+            CPU player1 = new CPU("Alexa");
             CPU computer = new CPU("SHODAN");
 
             player1.PlaceShips(numberOfShips);
