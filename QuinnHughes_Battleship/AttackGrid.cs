@@ -1,25 +1,7 @@
 ﻿namespace QuinnHughes_Battleship
 {
     internal class AttackGrid : ShipGrid
-    { //figure out inheritence??????
-        //private char[,] grid;
-        //public AttackGrid()
-        //{
-        //    grid = new char[10, 10]
-        //      {
-        //            {'~','~','~','~','~','~','~','~','~','~'},
-        //            {'~','~','~','~','~','~','~','~','~','~'},
-        //            {'~','~','~','~','~','~','~','~','~','~'},
-        //            {'~','~','~','~','~','~','~','~','~','~'},
-        //            {'~','~','~','~','~','~','~','~','~','~'},
-        //            {'~','~','~','~','~','~','~','~','~','~'},
-        //            {'~','~','~','~','~','~','~','~','~','~'},
-        //            {'~','~','~','~','~','~','~','~','~','~'},
-        //            {'~','~','~','~','~','~','~','~','~','~'},
-        //            {'~','~','~','~','~','~','~','~','~','~'}
-        //    };
-        //}
-
+    {
         public override void Display(string player)
         {
             Console.WriteLine(player + "'s Attacks");
@@ -96,15 +78,15 @@
                 Console.WriteLine("What Y or Vertical position will you attack?");
                 yPos = InputOutput.Int(1, grid.GetLength(1));
 
+                xPos--;
+                yPos--;
                 if ((enemyShipGrid[yPos,xPos] == '~') || (enemyShipGrid[yPos, xPos] == 'S'))
                 {
                     isValidGuess = true;
                     break;
                 }
             }
-
-            xPos--;
-            yPos--;
+            
 
             if (enemyShipGrid[yPos, xPos] == 'S')
             {
@@ -117,6 +99,60 @@
                 grid[yPos, xPos] = 'M';
             }
      
+        }
+        
+        int remainLocal = 0;
+        int lastHitX;
+        int lastHitY;
+        public void FireAttack(char[,] enemyShipGrid, Random rand)
+        {
+            int xPos = -1;
+            int yPos = -1;
+            bool isValidGuess = false;
+
+            //If previous attack hit, remain attacking the same area for a short while
+            
+            while (!isValidGuess)
+            {
+                if(remainLocal > 0)
+                {
+                    xPos = Math.Min(9, lastHitX + rand.Next(0, 3));
+                    yPos = Math.Min(9, lastHitY + rand.Next(0, 3));
+                    remainLocal--;
+                    if ((enemyShipGrid[yPos, xPos] == '~') || (enemyShipGrid[yPos, xPos] == 'S'))
+                    {
+                        isValidGuess = true;
+                        break;
+                    }
+                }
+                else
+                {
+                    xPos = rand.Next(0, grid.GetLength(0));
+                    yPos = rand.Next(0, grid.GetLength(1));
+
+
+                    if ((enemyShipGrid[yPos, xPos] == '~') || (enemyShipGrid[yPos, xPos] == 'S'))
+                    {
+                        isValidGuess = true;
+                        break;
+                    }
+                }
+            }
+
+            if (enemyShipGrid[yPos, xPos] == 'S')
+            {
+                remainLocal = 4;
+                lastHitX = xPos;
+                lastHitY = yPos;
+                enemyShipGrid[yPos, xPos] = 'X';
+                grid[yPos, xPos] = 'X';
+            }
+            else
+            {
+                remainLocal--;
+                enemyShipGrid[yPos, xPos] = 'M';
+                grid[yPos, xPos] = 'M';
+            }
         }
     }
 }

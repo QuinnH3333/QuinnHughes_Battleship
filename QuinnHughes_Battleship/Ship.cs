@@ -1,6 +1,6 @@
 ﻿namespace QuinnHughes_Battleship
 {
-    internal class Ship
+    public class Ship
     {
         public string Name;
         public int Length;
@@ -10,7 +10,5 @@
             Name = name;
             Length = length;
         }
-
-
     }
 }

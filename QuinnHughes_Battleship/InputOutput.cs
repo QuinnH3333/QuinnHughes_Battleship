@@ -1,6 +1,6 @@
 ﻿namespace QuinnHughes_Battleship
 {
-    internal class InputOutput
+    abstract class InputOutput
     {
         /// <summary>
         /// Outputs int after parsing player input and checking its within an exclusive range
@@ -32,41 +32,6 @@
                 {
                     Console.WriteLine("Invalid input. Try again.");
                 }
-            }
-            return parsedInt;
-        }
-
-        /// <summary>
-        /// Outputs int after parsing player input and checking it matches something within a given list
-        /// </summary>
-        /// <param name="list">List of possible ints</param>
-        /// <param name="outputOptions">Toggles the console display of the list</param>
-        /// <returns>Int within list</returns>
-        public static int Int(List<int> list, bool outputOptions)
-        {
-            if (outputOptions)
-            {
-                Console.WriteLine("Options: ");
-                foreach (int num in list)
-                {
-                    Console.WriteLine(num);
-                }
-            }
-
-            int parsedInt = 0;
-            bool isValidInput = false;
-            while (!isValidInput)
-            {
-                if (int.TryParse(Console.ReadLine(), out int playerInput)) //If parse success, move onto range check
-                {
-                    if (list.Contains(playerInput))
-                    {
-                        parsedInt = playerInput;
-                        isValidInput = true;
-                        break;
-                    }
-                }
-                Console.WriteLine("Invalid input. Try again.");
             }
             return parsedInt;
         }
@@ -161,6 +126,24 @@
                 {
                     Console.WriteLine("Invalid input. Try again.");
                 }
+            }
+            return inputString;
+        }
+        /// <summary>
+        /// Outputs string after a null check
+        /// </summary>
+        /// <returns>Null-checked String</returns>
+        public static string String()
+        {
+            string? inputString = "";
+            while (true)
+            {
+                inputString = Console.ReadLine();
+                if (inputString != null)
+                {
+                    break;
+                }
+                Console.WriteLine("Oops! Try again.");
             }
             return inputString;
         }

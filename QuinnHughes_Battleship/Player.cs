@@ -5,7 +5,7 @@
         public string name;
         public ShipGrid shipGrid;
         private AttackGrid attackGrid;
-
+       
         public Player(string enteredName)
         {
             shipGrid = new ShipGrid();
@@ -13,7 +13,7 @@
             name = enteredName;
         }
 
-        public void PlaceShips(int shipCount)
+        public virtual void PlaceShips(int shipCount)
         {
             Console.WriteLine(name + " place your ships.");
             shipGrid.Display(name);
@@ -23,7 +23,7 @@
                 shipGrid.Display(name);
             }
         }
-        public void Attack(char[,] enemyShipGrid)
+        public virtual void Attack(char[,] enemyShipGrid)
 
         {
             Console.WriteLine("\n" + name + ", Fire!");
@@ -34,7 +34,7 @@
             attackGrid.Display(name);
             attackGrid.DisplayStats(name);
 
+            }
         }
     }
-}
 

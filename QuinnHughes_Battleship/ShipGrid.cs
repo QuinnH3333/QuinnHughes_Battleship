@@ -3,7 +3,7 @@
     public class ShipGrid
     {
         public char[,] grid;
-        private static List<Ship> allShips = new List<Ship>
+        public static List<Ship> allShips = new List<Ship>
             {
                 new Ship("Carrier", 5),
                 new Ship("Battleship", 4),
@@ -11,7 +11,7 @@
                 new Ship("Submarine", 3),
                 new Ship("Destroyer", 2)
             };
-
+       
         public ShipGrid()
         {
             grid = new char[10, 10]
@@ -27,7 +27,7 @@
                     {'~','~','~','~','~','~','~','~','~','~'},
                     {'~','~','~','~','~','~','~','~','~','~'}
                };
-
+            
         }
  
         /// <summary>
@@ -84,7 +84,7 @@
         /// 
         public List<string> notUsedShips = new List<string>();
         public List<string> usedShips = new List<string>();
-        public void PlaceShip()
+        public virtual void PlaceShip()
         {
             string[] directions = ["up", "down", "left", "right"];
             foreach (Ship ship in allShips)
@@ -135,6 +135,48 @@
 
             }
         }
+        /// <summary>
+        /// Automated ship placement
+        /// </summary>
+        /// <param name="number"></param>
+        public void PlaceShip(Random rand)
+        {
+            string[] directions = ["up", "down", "left", "right"];
+            foreach (Ship ship in allShips)
+            {
+                if ((!usedShips.Contains(ship.Name.ToLower())) && (!notUsedShips.Contains(ship.Name.ToLower())))
+                {
+                    notUsedShips.Add(ship.Name.ToLower());
+                }
+                else if (usedShips.Contains(ship.Name.ToLower()))
+                {
+                    notUsedShips.Remove(ship.Name.ToLower());
+                }
+
+            }
+
+            string shipName;
+            int xPos;
+            int yPos;
+            string direction;
+            bool isShipPlaced = false;
+
+            while (!isShipPlaced)
+            {
+                shipName = notUsedShips[rand.Next(notUsedShips.Count)];
+                xPos = rand.Next(1, grid.GetLength(0));
+                yPos = rand.Next(1, grid.GetLength(1));
+                direction = directions[rand.Next(directions.Length)];
+
+                
+                isShipPlaced = PlaceAndVerify(shipName, xPos, yPos, direction);
+                if (isShipPlaced)
+                {
+                    usedShips.Add(shipName);
+                }
+            }
+        }
+
         /// <summary>
         /// Checks if there are any ships left on the board.
         /// </summary>
