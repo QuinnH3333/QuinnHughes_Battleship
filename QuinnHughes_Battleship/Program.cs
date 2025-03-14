@@ -5,7 +5,13 @@
 
         static void Main(string[] args)
         {
-            Simulate();
+            Title();
+            ModeSelect();
+            while (true)
+            {
+
+            }
+            
 
         }
         static void VersesMode()
@@ -69,7 +75,7 @@
             int numberOfShips = 5; //ShipGrid.allShips.Count;
 
             Console.WriteLine("Enter your name:");
-            CPU player1 = new CPU("Alexa");
+            CPU player1 = new CPU("Techna");
             CPU computer = new CPU("SHODAN");
 
             player1.PlaceShips(numberOfShips);
@@ -100,15 +106,32 @@
 
         static void Title()
         {
+            Console.WriteLine("--Press Space to play again--");
+            while (Console.ReadKey().Key != ConsoleKey.Spacebar)
+            {
 
+            }
         }
         static void PlayAgain()
         {
+            Console.WriteLine("--Press Space to play again--");
+            if (Console.ReadKey().Key != ConsoleKey.Spacebar)
+            {
+                
+            }
 
         }
         static void ModeSelect()
         {
+            List<string> Modes = new List<string>
+            {
+                "1P",
+                "VS",
+                "Simulate"
+            };
 
+            Console.WriteLine("--Select a Mode--");
+            InputOutput.String()
         }
     }
 }

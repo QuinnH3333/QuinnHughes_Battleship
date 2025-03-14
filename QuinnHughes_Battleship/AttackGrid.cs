@@ -2,6 +2,10 @@
 {
     internal class AttackGrid : ShipGrid
     {
+        /// <summary>
+        /// Displays a grid of where the player has previously attacked.
+        /// </summary>
+        /// <param name="player">Name of player</param>
         public override void Display(string player)
         {
             Console.WriteLine(player + "'s Attacks");
@@ -39,6 +43,10 @@
             }
             Console.ForegroundColor = ConsoleColor.Gray;
         }
+        /// <summary>
+        /// Displays hits and misses of a player.
+        /// </summary>
+        /// <param name="player">Player's Name</param>
         public void DisplayStats(string player)
         {
             int hits = 0;
@@ -64,6 +72,10 @@
             Console.ForegroundColor = ConsoleColor.Gray;
         }
 
+        /// <summary>
+        /// Fires attack based on player inputs
+        /// </summary>
+        /// <param name="enemyShipGrid">ShipGrid of the opposing player</param>
         public void FireAttack(char[,] enemyShipGrid)
         {
             int xPos = 0;
@@ -102,29 +114,35 @@
         }
 
 
+        //Automatic FireAttack declarations
         int lastHitX;
         int lastHitY;
-        bool[] directionHasBeenChecked = { true, true, true, true};
+        bool[] directionHasBeenChecked = { true, true, true, true };
         bool hitRecently = false;
-        int directionsChecked = 4;
-        int shipBitsFound =  0;    
+        int directionsChecked = 4; //number of directions
+        int attemptedGuesses = 0;
+        /// <summary>
+        /// Fires attacks automatically in a checkerboard pattern, deviating to check nearby tiles to hits, and eventually turning to pure random.
+        /// </summary>
+        /// <param name="enemyShipGrid">ShipGrid of the opposing player</param>
+        /// <param name="rand">Random</param>
         public void FireAttack(char[,] enemyShipGrid, Random rand)
         {
             int xPos = lastHitX;
             int yPos = lastHitY;
-            
             bool isValidGuess = false;
 
             while (!isValidGuess)
             {
                 if (hitRecently)
                 {
+                    //"Hunt" area surrounding last hit
                     xPos = lastHitX;
                     yPos = lastHitY;
 
                     if (!directionHasBeenChecked[0])
                     {
-                        xPos = Math.Min(9, lastHitX + 1);
+                        xPos = Math.Min(grid.GetLength(0) - 1, lastHitX + 1);
                         directionHasBeenChecked[0] = true;
                         directionsChecked++;
                     }
@@ -136,7 +154,7 @@
                     }
                     else if (!directionHasBeenChecked[2])
                     {
-                        yPos = Math.Min(9, lastHitY + 1);
+                        yPos = Math.Min(grid.GetLength(1) - 1, lastHitY + 1);
                         directionHasBeenChecked[2] = true;
                         directionsChecked++;
                     }
@@ -147,12 +165,19 @@
                         directionsChecked++;
                     }
                 }
-
-                if (directionsChecked >= directionHasBeenChecked.Length)
+                if (attemptedGuesses > grid.Length / 2) //Checkerboard can check 50 tiles before repeating.
                 {
                     hitRecently = false;
-                    //Randomly checks a checker board pattern, not wasting adjacent guesses
+                    //Check randomly
+                    xPos = rand.Next(0, grid.GetLength(0));
+                    yPos = rand.Next(0, grid.GetLength(1));
+                }
+                else if (directionsChecked >= directionHasBeenChecked.Length)
+                {
+                    hitRecently = false;
+                    attemptedGuesses++;
 
+                    //Randomly checks a checker board pattern, not wasting adjacent guesses
                     xPos = rand.Next(0, grid.GetLength(0));
                     if (xPos % 2 == 0)
                     {
@@ -163,17 +188,20 @@
                         yPos = rand.Next(0, grid.GetLength(1) / 2) * 2 + 1;
                     }
                 }
+                //Check if guess is valid
                 if ((enemyShipGrid[yPos, xPos] == '~') || (enemyShipGrid[yPos, xPos] == 'S'))
                 {
+                    attemptedGuesses = 0;
                     isValidGuess = true;
                     break;
                 }
             }
 
+            //Change grids appropriately
             if (enemyShipGrid[yPos, xPos] == 'S')
             {
-                //shipBitsFound++;
-                if(directionsChecked >= directionHasBeenChecked.Length)
+                //reset "hunt" mode
+                if (directionsChecked >= directionHasBeenChecked.Length)
                 {
                     lastHitX = xPos;
                     lastHitY = yPos;
@@ -183,17 +211,13 @@
                     }
                     directionsChecked = 0;
                 }
+
                 enemyShipGrid[yPos, xPos] = 'X';
                 grid[yPos, xPos] = 'X';
                 hitRecently = true;
             }
             else
             {
-                //if (shipBitsFound == ShipGrid.allShips[0].Length)
-                //{
-                //    hitRecently = false;
-                //    shipBitsFound = 0;
-                //}
                 enemyShipGrid[yPos, xPos] = 'M';
                 grid[yPos, xPos] = 'M';
             }
