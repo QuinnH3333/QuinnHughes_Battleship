@@ -79,9 +79,8 @@
 
         }
         /// <summary>
-        /// 
+        /// Prompts then places ships on a ship board using the players responses.
         /// </summary>
-        /// 
         public List<string> notUsedShips = new List<string>();
         public List<string> usedShips = new List<string>();
         public virtual void PlaceShip()
@@ -97,7 +96,6 @@
                 {
                     notUsedShips.Remove(ship.Name.ToLower());
                 }
-
             }
 
             string shipName;
@@ -293,8 +291,6 @@
 
                         for (int i = 0; i < shipLength; i++)
                         {
-                            Console.WriteLine("no water.");
-
                             if (!(grid[iterateY - 1, iterateX - 1] == '~'))
                             {
                                 isValidPlacement = false;
