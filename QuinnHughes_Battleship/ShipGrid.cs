@@ -31,12 +31,12 @@
         }
  
         /// <summary>
-        /// Displays the ship grid of a player.
+        /// Displays the ship grid 
         /// </summary>
         /// <param name="player">Name of the player</param>
         public virtual void Display(string player)
         {
-            Console.WriteLine(player +"'s Ships");
+            Console.WriteLine(player + "'s Ships");
             Console.WriteLine("   01 02 03 04 05 06 07 08 09 10");
             for (int i = 0; i < grid.GetLength(0); i++) //the 0 or 1 here refer to the dimension, since its 2D you only have 0 or 1 referring to x and y
             { //for each column

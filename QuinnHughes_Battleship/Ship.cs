@@ -2,8 +2,8 @@
 {
     internal class Ship
     {
-        public string Name { get; set; } //get; set; means you have read and write functionality with this field
-        public int Length { get; set; }
+        public string Name;
+        public int Length;
 
         public Ship(string name , int length)
         {
