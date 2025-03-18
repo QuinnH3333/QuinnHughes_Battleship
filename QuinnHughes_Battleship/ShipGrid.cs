@@ -11,7 +11,7 @@
                 new Ship("Submarine", 3),
                 new Ship("Destroyer", 2)
             };
-       
+
         public ShipGrid()
         {
             grid = new char[10, 10]
@@ -27,9 +27,9 @@
                     {'~','~','~','~','~','~','~','~','~','~'},
                     {'~','~','~','~','~','~','~','~','~','~'}
                };
-            
+
         }
- 
+
         /// <summary>
         /// Displays the ship grid 
         /// </summary>
@@ -113,7 +113,7 @@
                 Console.WriteLine("What X or Horizontal position should it start?");
                 xPos = InputOutput.Int(1, grid.GetLength(0));
                 Console.WriteLine("What Y or Vertical position should it start?");
-                yPos = InputOutput.Int(1,grid.GetLength(1));
+                yPos = InputOutput.Int(1, grid.GetLength(1));
                 Console.WriteLine("What direction should the rest of the ship follow?");
                 direction = InputOutput.String(directions, true);
 
@@ -166,7 +166,7 @@
                 yPos = rand.Next(1, grid.GetLength(1));
                 direction = directions[rand.Next(directions.Length)];
 
-                
+
                 isShipPlaced = PlaceAndVerify(shipName, xPos, yPos, direction);
                 if (isShipPlaced)
                 {
@@ -191,6 +191,15 @@
             }
             return isLoss;
         }
+
+        /// <summary>
+        /// Verifies if a ship can be placed, then alters the grid with the ship's position.
+        /// </summary>
+        /// <param name="ship">Ship being placed</param>
+        /// <param name="X">Starting X position</param>
+        /// <param name="Y">Starting Y position</param>
+        /// <param name="direction">Direction the ship flows</param>
+        /// <returns></returns>
         public bool PlaceAndVerify(string ship, int X, int Y, string direction)
         {
             int shipLength = 0;
@@ -209,7 +218,6 @@
             int iterateY;
             switch (direction)
             {
-
                 case "up":
                     iterateX = X;
                     iterateY = Y;
@@ -265,7 +273,7 @@
                             iterateY++;
                         }
 
-                        
+
                         if (isValidPlacement)
                         {
                             iterateY = Y;
@@ -275,9 +283,9 @@
                                 iterateY++;
                             }
                         }
-
                         break;
                     }
+
                 case "left":
                     {
                         iterateX = X;
@@ -308,7 +316,6 @@
                                 iterateX--;
                             }
                         }
-
                         break;
                     }
 
@@ -342,7 +349,6 @@
                                 iterateX++;
                             }
                         }
-
                         break;
                     }
             }

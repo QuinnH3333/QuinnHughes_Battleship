@@ -32,6 +32,7 @@ namespace QuinnHughes_Battleship
                 PlayAgain();
             }
         }
+
         /// <summary>
         /// Player VS Player battleship
         /// </summary>
@@ -47,13 +48,11 @@ namespace QuinnHughes_Battleship
             player1.PlaceShips(numberOfShips);
             player2.PlaceShips(numberOfShips);
 
-
             while (!player1.shipGrid.isLoserCheck() || !player2.shipGrid.isLoserCheck())
             {
                 player1.Attack(player2.shipGrid.grid);
                 player2.Attack(player1.shipGrid.grid);
             }
-
 
             if (player1.shipGrid.isLoserCheck())
             {
@@ -109,7 +108,6 @@ namespace QuinnHughes_Battleship
             player1.PlaceShips(numberOfShips);
             computer.PlaceShips(numberOfShips);
 
-
             while (!player1.shipGrid.isLoserCheck() && !computer.shipGrid.isLoserCheck())
             {
 
@@ -118,8 +116,6 @@ namespace QuinnHughes_Battleship
                 computer.Attack(player1.shipGrid.grid);
                 computer.shipGrid.Display(computer.name);
                 player1.attackGrid.DisplayStats(player1.name);
-
-
             }
 
             if (player1.shipGrid.isLoserCheck())
@@ -131,6 +127,7 @@ namespace QuinnHughes_Battleship
                 Console.WriteLine(player1.name + " Wins!");
             }
         }
+
         /// <summary>
         /// Title screen which prompts player for an input to start
         /// </summary>
@@ -140,9 +137,9 @@ namespace QuinnHughes_Battleship
             Console.WriteLine("--Press Space to play--");
             while (Console.ReadKey().Key != ConsoleKey.Spacebar)
             {
-
             }
         }
+
         /// <summary>
         /// Prompts the player if they want to play again
         /// </summary>
@@ -152,8 +149,8 @@ namespace QuinnHughes_Battleship
             while (Console.ReadKey().Key != ConsoleKey.Spacebar)
             {
             }
-
         }
+
         /// <summary>
         /// Prompt player to select a mode
         /// </summary>
@@ -166,7 +163,6 @@ namespace QuinnHughes_Battleship
                 "VS",
                 "Simulate"
             };
-
             Console.WriteLine("--Select a Mode--");
             return InputOutput.String(modes, true);
         }

@@ -99,7 +99,6 @@
                 }
             }
 
-
             if (enemyShipGrid[yPos, xPos] == 'S')
             {
                 enemyShipGrid[yPos, xPos] = 'X';
@@ -110,11 +109,9 @@
                 enemyShipGrid[yPos, xPos] = 'M';
                 grid[yPos, xPos] = 'M';
             }
-
         }
 
-
-        //Automatic FireAttack declarations
+        //CPU FireAttack declarations
         int lastHitX;
         int lastHitY;
         bool[] directionHasBeenChecked = { true, true, true, true };
@@ -211,7 +208,6 @@
                     }
                     directionsChecked = 0;
                 }
-
                 enemyShipGrid[yPos, xPos] = 'X';
                 grid[yPos, xPos] = 'X';
                 hitRecently = true;
@@ -221,7 +217,6 @@
                 enemyShipGrid[yPos, xPos] = 'M';
                 grid[yPos, xPos] = 'M';
             }
-
         }
     }
 }
