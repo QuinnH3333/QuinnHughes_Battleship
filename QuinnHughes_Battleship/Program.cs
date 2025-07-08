@@ -48,7 +48,7 @@ namespace QuinnHughes_Battleship
             player1.PlaceShips(numberOfShips);
             player2.PlaceShips(numberOfShips);
 
-            while (!player1.shipGrid.isLoserCheck() || !player2.shipGrid.isLoserCheck())
+            while (!player1.shipGrid.isLoserCheck() && !player2.shipGrid.isLoserCheck())
             {
                 player1.Attack(player2.shipGrid.grid);
                 player2.Attack(player1.shipGrid.grid);
@@ -79,7 +79,7 @@ namespace QuinnHughes_Battleship
             computer.PlaceShips(numberOfShips);
 
 
-            while (!player1.shipGrid.isLoserCheck() || !computer.shipGrid.isLoserCheck())
+            while (!player1.shipGrid.isLoserCheck() && !computer.shipGrid.isLoserCheck())
             {
                 player1.Attack(computer.shipGrid.grid);
                 computer.Attack(player1.shipGrid.grid);

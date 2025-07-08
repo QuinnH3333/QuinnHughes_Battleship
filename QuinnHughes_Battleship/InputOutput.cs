@@ -79,7 +79,7 @@
                     Console.WriteLine("Invalid input. Try again.");
                 }
             }
-            return inputString;
+            return inputString!;
         }
      
 
@@ -127,7 +127,7 @@
                     Console.WriteLine("Invalid input. Try again.");
                 }
             }
-            return inputString;
+            return inputString!;
         }
         /// <summary>
         /// Outputs string after a null check
